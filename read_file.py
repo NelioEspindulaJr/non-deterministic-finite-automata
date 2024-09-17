@@ -3,16 +3,18 @@ import sys
 from utils import is_non_deterministic
 
 
-def read_file():
+def read_file(file_name: str = "", get_deterministic: bool = False):
     file = None
     states = []
     initial_state = None
     final_states = []
     transitions = []
     alphabet = []
+    file_name = file_name
 
     while file is None:
-        file_name = input("Enter the file name inside this directory: ")
+        if not file_name:
+            file_name = input("Enter the file name inside this directory: ")
 
         try:
             with open(file_name, "rt") as search_file:
@@ -41,7 +43,7 @@ def read_file():
                             else:
                                 alphabet.append(input_char)
                             transitions.append((current_state, input_char, next_state))
-                    if not is_non_deterministic(transitions):
+                    if not get_deterministic and not is_non_deterministic(transitions):
                         print(
                             "Oops! It seems that this automaton is deterministic. Try another one."
                         )
@@ -49,4 +51,4 @@ def read_file():
         except FileNotFoundError:
             print("File not found. Please try again.")
         else:
-            return states, initial_state, final_states, transitions, alphabet
+            return states, initial_state, final_states, transitions, alphabet, file_name

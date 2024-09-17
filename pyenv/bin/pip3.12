@@ -1,4 +1,4 @@
-#!/home/nelio/non-deterministic-finite-automata/automaton/bin/python3
+#!/home/nelio/non-deterministic-finite-automata/pyenv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

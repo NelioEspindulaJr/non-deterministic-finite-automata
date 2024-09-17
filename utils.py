@@ -69,31 +69,93 @@ def fetch_lambda_closure(
         if next_state not in lambda_closure:
             fetch_lambda_closure(transitions, next_state, lambda_closure)
 
+    lambda_closure.sort()
+
     return lambda_closure
 
+def get_closure_key(closure: List[str]):
+    return "".join(closure)
 
-def search_closure(
+def closure_finder(
+    closure: List[str],
     transitions: List[Tuple[str, str, str]],
-    initial_state: str,
-    alphabet_value: str,
-    closure: List[str] = None,
-):
-    if closure is None:
-        closure = []
+    alphabet: List[str],
+    states_dictionary: dict[str, dict[str, List[str]]],
+) -> dict[str, dict[str, List[str]]]:
+    """
+    Recursively computes the closure of states in a non-deterministic finite automaton (NFA) and
+    constructs the deterministic finite automaton (DFA) transition table.
 
-    state_transitions = [
-        x
-        for x in transitions
-        if x[0] == initial_state and (x[1] in ["λ", alphabet_value])
-    ]
+    Args:
+        closure (list): The current closure of states to be expanded.
+        transitions (list of tuples): A list of tuples representing transitions of the NFA.
+                                      Each tuple is of the form (current_state, symbol, next_state).
+        alphabet (list): The list of input symbols (excluding lambda transitions) in the automaton.
+        states_dictionary (dict): The dictionary representing the DFA transition table being built.
+                                  Keys are concatenated strings of states, and values are dictionaries
+                                  mapping symbols to the next state closure.
 
-    for transition in state_transitions:
-        if transition[1] == "λ":
-            if transition[2] not in closure:
-                closure.append(transition[2])
-            search_closure(transitions, transition[2], alphabet_value, closure)
+    Returns:
+        dict: The updated DFA transition table as a dictionary with state closures as keys and their
+              respective transitions as values.
+
+    This function performs the following steps:
+    1. Iterates over each input symbol in the alphabet.
+    2. Finds all possible transitions for each symbol from the current set of states.
+    3. Expands the current state closure by recursively including any lambda transitions.
+    4. Updates the transition table (`states_dictionary`) for each state based on the computed closure.
+    5. Recursively calls `closure_finder` on newly discovered closures to explore further transitions.
+    6. Handles cases where no transition is found by assigning an empty transition ("-").
+
+    Notes:
+    - The function modifies `states_dictionary` in place, which holds the DFA state transition table.
+    - The function ensures that newly computed closures are sorted to maintain consistent state keys.
+    - Recursion continues until all reachable state closures have been processed.
+    """
+    current_closure = closure
+
+    for letter in alphabet:
+        new_state_closure = []
+
+        for state in current_closure:
+            letter_state_transitions = [
+                x for x in transitions if x[0] == state and x[1] == letter
+            ]
+
+            for transition in letter_state_transitions:
+                next_state = transition[2]
+                if next_state not in new_state_closure:
+                    new_state_closure.append(next_state)
+
+                lambda_closure = fetch_lambda_closure(transitions, next_state)
+                for closure_state in lambda_closure:
+                    if closure_state not in new_state_closure:
+                        new_state_closure.append(closure_state)
+
+        new_state_closure.sort()
+
+        if new_state_closure:
+            closure_key = get_closure_key(current_closure)
+            new_closure_key = get_closure_key(new_state_closure)
+
+            if closure_key not in states_dictionary:
+                states_dictionary[closure_key] = {}
+
+            if letter not in states_dictionary[closure_key]:
+                states_dictionary[closure_key][letter] = new_state_closure
+
+            if new_closure_key not in states_dictionary:
+                states_dictionary[new_closure_key] = {}
+                closure_finder(
+                    new_state_closure, transitions, alphabet, states_dictionary
+                )
         else:
-            if transition[2] not in closure:
-                closure.append(transition[2])
+            new_state_closure = ["-"]
+            closure_key = get_closure_key(current_closure)
+            new_closure_key = get_closure_key(new_state_closure)
 
-    return closure
+            if letter not in states_dictionary[closure_key]:
+                states_dictionary[closure_key][letter] = new_state_closure
+
+    return states_dictionary
+
