@@ -119,3 +119,7 @@ Q0Q4 c Q0Q4
 I've checked some [gaphviz documentations](https://www.graphviz.org/), but didnt have much success implementing it, so i'm letting for a further point in future. And also, [this python library](https://pysimpleautomata.readthedocs.io/en/latest/index.html) seems very useful, and worth to check it later.
 
 Very good job made so far, and im proud of my accomplishments on this assignment.
+
+### Partial results until now: 25/09/2024 - 18:16
+
+Finished both assignment instructions, now only remains how to plot the DFA into a graph. I've searched through some libraries and the best one i found was pysimpleautomata, but, i need to adapt the information in a specific way to be plotted. Which i will be doing later.

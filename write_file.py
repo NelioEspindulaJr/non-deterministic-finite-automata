@@ -1,4 +1,5 @@
 import os
+from typing import Dict, List
 
 
 def write_dfa_file(new_states, initial_closure, final_states, input_filename):
@@ -24,5 +25,35 @@ def write_dfa_file(new_states, initial_closure, final_states, input_filename):
                 if destination[0] != "-":
                     file.write(f"{state} {letter} {''.join(destination)}\n")
 
-    return output_filename
+    return initial_state, output_filename
 
+
+def write_accepted_words_file(
+    dfa_states: Dict[str, Dict[str, List[str]]],
+    initial_dfa_state: str,
+    words: List[str],
+    words_file_name: str,
+):
+    output_words_file_name = os.path.splitext(words_file_name)[0] + "_accepted.txt"
+
+    with open(output_words_file_name, "w") as words_file:
+        for word in words:
+            current_state = initial_dfa_state
+            accepted = True  # Para verificar se a palavra foi aceita ou não
+
+            for char in word:
+                # Verifica se o estado atual e o caractere possuem uma transição
+                next_state = dfa_states.get(current_state, {}).get(char)
+
+                if not next_state:
+                    print(f"Word {word} is not accepted by the automaton.")
+                    words_file.write(f"{word} -> não aceito\n")
+                    accepted = False
+                    break
+
+                # Atualiza o estado atual para o próximo estado
+                current_state = "".join(next_state)
+
+            if accepted:
+                words_file.write(f"{word} -> aceito\n")
+                print(f"Word {word} is accepted by the automaton.")

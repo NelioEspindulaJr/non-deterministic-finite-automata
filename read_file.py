@@ -49,6 +49,28 @@ def read_file(file_name: str = "", get_deterministic: bool = False):
                         )
                         sys.exit()
         except FileNotFoundError:
+            file_name = ""
             print("File not found. Please try again.")
         else:
             return states, initial_state, final_states, transitions, alphabet, file_name
+
+
+def read_words():
+    file = None
+    file_name = ""
+    words = []
+
+    while file is None:
+        if not file_name:
+            file_name = input(
+                "Enter the file name containing the words to be verified by the DFA: "
+            )
+
+        try:
+            with open(file_name, "rt") as file:
+                words = file.read().splitlines()
+        except FileNotFoundError:
+            file_name = ""
+            print("File not found. Please try again.")
+        else:
+            return words, file_name

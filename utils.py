@@ -73,8 +73,10 @@ def fetch_lambda_closure(
 
     return lambda_closure
 
+
 def get_closure_key(closure: List[str]):
     return "".join(closure)
+
 
 def closure_finder(
     closure: List[str],
@@ -158,4 +160,3 @@ def closure_finder(
                 states_dictionary[closure_key][letter] = new_state_closure
 
     return states_dictionary
-
