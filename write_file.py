@@ -25,7 +25,7 @@ def write_dfa_file(new_states, initial_closure, final_states, input_filename):
                 if destination[0] != "-":
                     file.write(f"{state} {letter} {''.join(destination)}\n")
 
-    return initial_state, output_filename
+    return initial_state, output_filename, dfa_final_states, all_states
 
 
 def write_accepted_words_file(
