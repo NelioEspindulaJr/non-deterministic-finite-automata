@@ -39,10 +39,9 @@ def write_accepted_words_file(
     with open(output_words_file_name, "w") as words_file:
         for word in words:
             current_state = initial_dfa_state
-            accepted = True  # Para verificar se a palavra foi aceita ou não
+            accepted = True
 
             for char in word:
-                # Verifica se o estado atual e o caractere possuem uma transição
                 next_state = dfa_states.get(current_state, {}).get(char)
 
                 if not next_state:
@@ -51,7 +50,6 @@ def write_accepted_words_file(
                     accepted = False
                     break
 
-                # Atualiza o estado atual para o próximo estado
                 current_state = "".join(next_state)
 
             if accepted:

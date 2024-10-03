@@ -63,7 +63,7 @@ def read_words():
     while file is None:
         if not file_name:
             file_name = input(
-                "Enter the file name containing the words to be verified by the DFA: "
+                "\nEnter the file name containing the words to be verified by the DFA: "
             )
 
         try:

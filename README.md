@@ -1,125 +1,42 @@
 # non-deterministic-finite-automata
  Convert a NFA (Non-deterministic Finite Automaton) to a DFA (Deterministic Finite Automata) 
 
-### Partial results until now: 10/09/2024 - 04:19am
+### How to run?
+Before running the project, make sure you have python installed with any stable version greater than 3.8.x. Next step, run the following command:
 
-Currently being capable of getting λ-closure states recursively, and generating the DFA super states. Using the following NFA:
-
-![alt text](/assets/image.png)
-
-WHAT MY CODE GENERATES:
-```json
-{
-  "Q0Q1Q2Q4": [
-    "Q1",
-    "Q2",
-    "Q0",
-    "Q4"
-  ],
-  "Q0Q2Q4": [
-    "Q2",
-    "Q0",
-    "Q4"
-  ],
-  "Q0Q4": [
-    "Q0",
-    "Q4"
-  ],
-  "Q4": [
-    "Q4"
-  ]
-}
- ```
-
- WHAT SHOULD GENERATE:
-
- ```json
-{
-  "Q0Q1Q2Q4": [
-    "Q0Q1Q2Q4",
-    "Q0Q2Q4",
-    "Q0Q4"
-  ],
-  "Q0Q2Q4": [
-    "Q4",
-    "Q0Q2Q4",
-    "Q0Q4"
-  ],
-  "Q0Q4": [
-    "Q4",
-    "Ø",
-    "Q0Q4"
-  ],
-  "Q4": [
-    "Q4",
-    "Ø",
-    "Ø"
-  ]
-}
- ```
-
-Is still very raw, but im going to improve on performance and optimizations later, my major priority now is to get the code working.
-
-> Some references that helped me:
-> * https://web.stanford.edu/class/archive/cs/cs103/cs103.1202/notes/Guide%20to%20the%20Subset%20Construction.pdf
->
->* https://github.com/Rahul-Jyoti/NFA-TO-DFA-CONVERSION/tree/master
->
->* ChatGPT ;)
-
-### Partial results until now: 17/09/2024 - 02:42am
-
-So far i have made very good advancements on code, with almost finishing half of the task assignment (part one). Only (all of part 2 ) remains to be completed.
-
-![alt text](/assets/image.png)
-
-input_file.txt:
 ```
-Q1 Q2 Q0 Q4
-Q1
-Q1 Q2 Q0 Q4
-Q1 a Q1
-Q1 h Q2
-Q2 b Q2
-Q2 h Q0
-Q0 c Q0
-Q0 h Q4
-Q4 a Q4
-```
-For now, i can convert any NFA to DFA, which prints me this:
-
-Transitions table: \
-closure-λ(Q1) = {Q0Q1Q2Q4}
-> 
-> |          | a             | b          | c       |
-> |----------|---------------|------------|---------|
-> | Q0Q1Q2Q4 | [Q0,Q1,Q2,Q4] | [Q0,Q2,Q4] | [Q0,Q4] |
-> | Q0Q2Q4   | [Q4]          | [Q0,Q2,Q4] | [Q0,Q4] |
-> | Q4       | [Q4]          | [-]        | [-]     |
-> | Q0Q4     | [Q4]          | [-]        | [Q0,Q4] |
-
-And saves the following file on my directory:
-
-input_file_dfa.txt:
-```
-Q0Q1Q2Q4 Q0Q2Q4 Q4 Q0Q4
-Q0Q1Q2Q4
-Q0Q1Q2Q4 Q0Q2Q4 Q4 Q0Q4
-Q0Q1Q2Q4 a Q0Q1Q2Q4
-Q0Q1Q2Q4 b Q0Q2Q4
-Q0Q1Q2Q4 c Q0Q4
-Q0Q2Q4 a Q4
-Q0Q2Q4 b Q0Q2Q4
-Q0Q2Q4 c Q0Q4
-Q4 a Q4
-Q0Q4 a Q4
-Q0Q4 c Q0Q4
+pip install -r requirements.txt
 ```
 
-I've checked some [gaphviz documentations](https://www.graphviz.org/), but didnt have much success implementing it, so i'm letting for a further point in future. And also, [this python library](https://pysimpleautomata.readthedocs.io/en/latest/index.html) seems very useful, and worth to check it later.
+Now, in the terminal, execute:
 
-Very good job made so far, and im proud of my accomplishments on this assignment.
+```
+python main.py
+```
 
-### Partial results until now: 25/09/2024 - 18:16
+> It is imprecedent that you already have your automaton and words list to be tested typed and saved inside the root folder of the project, following the rules specified in task assignment.
 
-Finished both assignment instructions, now only remains how to plot the DFA into a graph. I've searched through some libraries and the best one i found was pysimpleautomata, but, i need to adapt the information in a specific way to be plotted. Which i will be doing later.
+Now, it will be asked for you to input the file name of the NFA:
+
+```bash
+~/non-deterministic-finite-automata$ python main.py 
+Enter the file name inside this directory: 
+```
+
+After that, will be printed the DFA table with lambda closure and saved a new file called: `nfaInputedFileName_dfa.txt` with the DFA initial and final states and transitions. Also will be asked a new input of the file name of the words to be tested in this automaton.
+
+
+Example:
+```bash
+Transitions table: closure-λ(Q1) = {Q0Q1Q2Q4}
+
+                      a           b        c       
+Q0Q1Q2Q4  [Q0,Q1,Q2,Q4]  [Q0,Q2,Q4]  [Q0,Q4] 
+Q0Q2Q4    [Q4]           [Q0,Q2,Q4]  [Q0,Q4] 
+Q4        [Q4]           [-]         [-]     
+Q0Q4      [Q4]           [-]         [Q0,Q4]
+
+Enter the file name containing the words to be verified by the DFA: 
+```
+
+After that will be printed all the words and say if is accepted or not by the DFA, and saved a new file called `wordsInputFileName_accepted.txt` with the results (accepted or not).
