@@ -31,6 +31,7 @@ def write_dfa_file(new_states, initial_closure, final_states, input_filename):
 def write_accepted_words_file(
     dfa_states: Dict[str, Dict[str, List[str]]],
     initial_dfa_state: str,
+    final_dfa_states: List[str],
     words: List[str],
     words_file_name: str,
 ):
@@ -49,8 +50,12 @@ def write_accepted_words_file(
                     words_file.write(f"{word} -> não aceito\n")
                     accepted = False
                     break
-
                 current_state = "".join(next_state)
+
+            if current_state not in final_dfa_states:
+                accepted = False
+                words_file.write(f"{word} -> não aceito\n")
+                print(f"Word {word} is not accepted by the automaton.")
 
             if accepted:
                 words_file.write(f"{word} -> aceito\n")

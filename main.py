@@ -24,4 +24,4 @@ new_initial_state, output_file_name, new_final_states, new_states = write_dfa_fi
 
 words, words_file_name = read_words()
 
-write_accepted_words_file(new_states_dict, new_initial_state, words, words_file_name)
+write_accepted_words_file(new_states_dict, new_initial_state, new_final_states, words, words_file_name,)
